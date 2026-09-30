@@ -52,7 +52,7 @@ class InventoryLedger:
 
     def balance(self, account: str) -> Decimal:
         with self._lock:
-            return sum((r.quantity for r in self._rows if r.account == account), Decimal("0"))
+            return sum((r.quantity for r in self._rows if r.account == account and r.quantity > 0), Decimal("0"))
 
     def entries(self, account: str | None = None) -> tuple[Entry, ...]:
         with self._lock:
