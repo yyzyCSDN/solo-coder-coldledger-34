@@ -50,9 +50,13 @@ class InventoryLedger:
             self._refs.add(key)
             return row
 
+    def has_reference(self, account: str, reference: str) -> bool:
+        with self._lock:
+            return (account, reference) in self._refs
+
     def balance(self, account: str) -> Decimal:
         with self._lock:
-            return sum((r.quantity for r in self._rows if r.account == account and r.quantity > 0), Decimal("0"))
+            return sum((r.quantity for r in self._rows if r.account == account), Decimal("0"))
 
     def entries(self, account: str | None = None) -> tuple[Entry, ...]:
         with self._lock:
